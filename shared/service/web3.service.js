@@ -8,23 +8,26 @@ const Unit = helper.Unit;
 //     from: testWallet,
 // });
 
-getBalanceOfAddress = (address, unit = Unit.ether) => web3.fromWei(web3.eth.getBalance(address), unit).toNumber();
+const getBalanceOfAddress = (address, unit = Unit.ether) => web3.fromWei(web3.eth.getBalance(address), unit).toNumber();
 
-isAddress = (address) => web3.isAddress(address);
+const isAddress = (address) => web3.isAddress(address);
 
-addTokenToAddress = (userId, amount) => nPromise.resolve();
+const addTokenToAddress = (userId, amount) => nPromise.resolve();
 
-getBalanceToken = (userId) => Promise.resolve(0);
+const getBalanceToken = (userId) => Promise.resolve(0);
 
-getBalanceEthereum = (userId) => Promise.resolve(0);
+const getBalanceEthereum = (userId) => Promise.resolve(0);
 
-updateUserWalletAddress = (userId, walletAddress) => Promise.resolve();
+const updateUserWalletAddress = (userId, walletAddress) => Promise.resolve();
 
+const updateConfigContract = (supply, ownership, addressMigration,
+    startTime, endTime) => Promise.resolve();
 module.exports = {
     getBalanceOfAddress,
     isAddress,
     addTokenToAddress,
     getBalanceToken,
     getBalanceEthereum,
-    updateUserWalletAddress
+    updateUserWalletAddress,
+    updateConfigContract
 }

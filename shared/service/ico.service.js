@@ -13,6 +13,12 @@ function getBalance(userId) {
 function updateUserWalletAddress(userId, walletAddress) {
     return Web3Service.updateUserWalletAddress(userId, walletAddress);
 }
+
+function updateConfigContract(supply, ownership, addressMigration,
+    startTime, endTime) {
+    return Web3Service.updateUserWalletAddress(supply, ownership, addressMigration,
+        startTime, endTime);
+}
 module.exports = {
     addToken,
     getBalance,

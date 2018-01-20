@@ -7,6 +7,7 @@ api.get('/getBalance', getBalance);
 
 api.post('/updateUserWalletAddress', updateUserWalletAddress);
 
+api.post('/updateConfigContract', updateConfigContract);
 
 function addToken(request, response, next) {
     const userId = request.body.userId;
@@ -48,6 +49,28 @@ function updateUserWalletAddress(request, response, next) {
     const userId = request.body.userId;
     const walletAddress = request.body.walletAddress;
     ICOService.updateUserWalletAddress(userId, walletAddress)
+        .then(() => {
+            response.status(200).send({
+                error: {
+                    status: 'OK',
+                    code: 0,
+                    message: `OK`
+                }
+            })
+        })
+        .catch(err => next(err));
+}
+
+function updateConfigContract(request, response, next) {
+    const {
+        supply,
+        ownership,
+        addressMigration,
+        startTime,
+        endTime
+    } = request.body;
+    ICOService.updateConfigContract(supply, ownership, addressMigration,
+            startTime, endTime)
         .then(() => {
             response.status(200).send({
                 error: {

@@ -1,9 +1,14 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const fs = require('fs');
 const path = require('path');
-const web3Service = require('./shared/service/web3.service')
+const web3Service = require('./shared/service/web3.service');
 
 app.set('port', 3000);
+
+app.use([express.json(), express.urlencoded({
+    extended: false
+})]);
 
 app.use('*', (request, response, next) => {
     const clientIP = request.ip || request.headers['x-forwarded-for'] ||
@@ -27,6 +32,12 @@ app.use('*', (request, response, next) => {
 
     next();
 })
+
+
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({
+//     extended: false
+// }));
 
 let apiName = '';
 

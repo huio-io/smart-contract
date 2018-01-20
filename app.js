@@ -15,8 +15,9 @@ app.use('*', (request, response, next) => {
         request.connection.remoteAddress || request.socket.remoteAddress ||
         request.connection.socket.remoteAddress;
 
+    // White-list ip address.
     if (false) {
-        response.status(401).send({
+        return response.status(401).send({
             error: {
                 status: 'INVALID_REQUEST',
                 code: 0,
@@ -32,12 +33,6 @@ app.use('*', (request, response, next) => {
 
     next();
 })
-
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({
-//     extended: false
-// }));
 
 let apiName = '';
 

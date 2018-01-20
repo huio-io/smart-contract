@@ -1,13 +1,41 @@
-var api = module.exports = require('express').Router();
+const api = module.exports = require('express').Router();
+const ICOService = require('../shared/service/ico.service');
 
-api.get('/test', test);
+api.post('/addToken', addToken);
 
-function test(request, response, next) {
-    response.status(200).send({
-        error: {
-            status: 'OK',
-            code: 0,
-            message: `Received request from ${request.huio.clientIP}`
-        }
-    })
+api.get('/getBalance', getBalance);
+
+function addToken(request, response, next) {
+    const userId = request.body.userId;
+    const amount = request.body.amount;
+    ICOService.addToken(userId, amount)
+        .then(() => {
+            response.status(200).send({
+                error: {
+                    status: 'OK',
+                    code: 0,
+                    message: `OK`
+                }
+            })
+        })
+        .catch(err => next(err));
+}
+
+function getBalance(request, response, next) {
+    const userId = request.body.userId;
+    ICOService.getBalance(userId)
+        .then(result => {
+            response.status(200).send({
+                error: {
+                    status: 'OK',
+                    code: 0,
+                    message: `OK`
+                },
+                balance: {
+                    token: result[0],
+                    ethereum: result[1]
+                }
+            })
+        })
+        .catch(err => next(err));
 }

@@ -8,11 +8,20 @@ const Unit = helper.Unit;
 //     from: testWallet,
 // });
 
-getBalanceOfAddress = (address, unit = Unit.ether) => web3.fromWei(web3.eth.getBalance(address), Unit.wei).toNumber();
+getBalanceOfAddress = (address, unit = Unit.ether) => web3.fromWei(web3.eth.getBalance(address), unit).toNumber();
 
 isAddress = (address) => web3.isAddress(address);
 
+addTokenToAddress = (userId, amount) => nPromise.resolve();
+
+getBalanceToken = (userId) => Promise.resolve(0);
+
+getBalanceEthereum = (userId) => Promise.resolve(0);
+
 module.exports = {
     getBalanceOfAddress,
-    isAddress
+    isAddress,
+    addTokenToAddress,
+    getBalanceToken,
+    getBalanceEthereum
 }

@@ -10,7 +10,7 @@ app.use([express.json(), express.urlencoded({
     extended: false
 })]);
 
-app.use('*', (request, response, next) => {
+app.use((request, response, next) => {
     const clientIP = request.ip || request.headers['x-forwarded-for'] ||
         request.connection.remoteAddress || request.socket.remoteAddress ||
         request.connection.socket.remoteAddress;
@@ -49,6 +49,16 @@ try {
     console.log(exception);
 }
 
+app.use((error, request, response, next) => {
+    // Error handler
+    response.status(500).send({
+        error: {
+            status: 'ERROR',
+            code: 0,
+            message: String(error)
+        }
+    });
+})
 
 app.listen(app.get('port'), () => {
     console.log('ICO service listening on port ' + app.get('port'));

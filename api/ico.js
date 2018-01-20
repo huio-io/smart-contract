@@ -25,7 +25,8 @@ function addToken(request, response, next) {
 }
 
 function getBalance(request, response, next) {
-    const userId = request.body.userId;
+    const userId = request.query.userId;
+    const address = request.query.address;
     ICOService.getBalance(userId)
         .then(result => {
             response.status(200).send({

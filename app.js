@@ -3,6 +3,7 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const web3Service = require('./shared/service/web3.service');
+const ErrorHandler = require('./shared/errorHandler');
 
 app.set('port', 3000);
 
@@ -51,11 +52,12 @@ try {
 
 app.use((error, request, response, next) => {
     // Error handler
-    response.status(500).send({
+    const errorObject = ErrorHandler.getErrorObject(error);
+    response.status(errorObject.httpCode).send({
         error: {
-            status: 'ERROR',
-            code: 0,
-            message: String(error)
+            status: errorObject.status,
+            code: 1,
+            message: errorObject.message
         }
     });
 })

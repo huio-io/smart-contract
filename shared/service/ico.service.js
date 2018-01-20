@@ -10,7 +10,11 @@ function getBalance(userId) {
     ]);
 }
 
+function updateUserWalletAddress(userId, walletAddress) {
+    return Web3Service.updateUserWalletAddress(userId, walletAddress);
+}
 module.exports = {
     addToken,
-    getBalance
+    getBalance,
+    updateUserWalletAddress
 }

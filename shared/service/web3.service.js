@@ -18,10 +18,13 @@ getBalanceToken = (userId) => Promise.resolve(0);
 
 getBalanceEthereum = (userId) => Promise.resolve(0);
 
+updateUserWalletAddress = (userId, walletAddress) => Promise.resolve();
+
 module.exports = {
     getBalanceOfAddress,
     isAddress,
     addTokenToAddress,
     getBalanceToken,
-    getBalanceEthereum
+    getBalanceEthereum,
+    updateUserWalletAddress
 }

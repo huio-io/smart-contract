@@ -1,16 +1,20 @@
 {
-  "name": "icoservice",
+  "name": "HuiOIcoService",
   "version": "1.0.0",
-  "description": "",
+  "description": "HuiOService",
+  "engines": {
+    "node": "6.9.1"
+  },
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "HuiO",
   "dependencies": {
     "express": "^4.16.2",
+    "compression": "^1.7.1",
     "web3": "0.20.4"
   }
 }

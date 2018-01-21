@@ -5,7 +5,7 @@ const path = require('path');
 const web3Service = require('./shared/service/web3.service');
 const ErrorHandler = require('./shared/errorHandler');
 
-app.set('port', 3000);
+app.set('port', process.env.PORT || 3000);
 
 app.use([express.json(), express.urlencoded({
     extended: false

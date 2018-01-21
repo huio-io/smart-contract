@@ -46,9 +46,16 @@ module.exports = function (deployer) {
 
           var IcoContractInstance = web3.eth.contract(IcoContractABI).at(IcoContractAddress);
           var IcoTokenContractInstance = web3.eth.contract(IcoTokenContractABI).at(TokenContractAddress);
-
+          // init and listenning all events
+          var events = IcoContractInstance.allEvents({ fromBlock: 0, toBlock: 'latest' }, function (error, result) {
+            console.log('IcoContractInstance Event triggered');
+            if (!error) { console.log(result); }
+            else {
+              console.log(error);
+            }
+          });
           // end init web3
-          
+
           return testGetToken(IcoContractInstance, IcoTokenContractInstance, userId);
         }, 5000)
       });
@@ -58,20 +65,9 @@ module.exports = function (deployer) {
 
 
 function testGetToken(IcoContractInstance, IcoTokenContractInstance, userId) {
-
 }
 
 function testFunc(IcoContractInstance, IcoTokenContractInstance) {
-  // listenning to event
-  var events = IcoContractInstance.allEvents({ fromBlock: 0, toBlock: 'latest' }, function (error, result) {
-    console.log('listenning to smart contract');
-    if (!error) { console.log(result); }
-    else {
-      console.log(error);
-    }
-  });
-
-
   // send 2 ETH from ETHFUDHUI
 
   const ethFundHui = '0x008D97AA9715F8689057Ae14CCCf4CEA36cAA89f';

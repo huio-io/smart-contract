@@ -35,7 +35,21 @@ module.exports = function (deployer) {
         instance.setIcoContract(IcoContract.address);
 
         return setTimeout(function () {
-          return testFunc(IcoContract.address, IcoToken.address);
+          // Init web3
+          var Web3 = require('web3');
+          var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+          console.log(web3.version.api);
+
+          var IcoContractABI = require('../build/contracts/IcoContract.json').abi;
+          var IcoTokenContractABI = require('../build/contracts/IcoToken.json').abi;
+
+
+          var IcoContractInstance = web3.eth.contract(IcoContractABI).at(IcoContractAddress);
+          var IcoTokenContractInstance = web3.eth.contract(IcoTokenContractABI).at(TokenContractAddress);
+
+          // end init web3
+          
+          return testGetToken(IcoContractInstance, IcoTokenContractInstance, userId);
         }, 5000)
       });
     });
@@ -43,19 +57,11 @@ module.exports = function (deployer) {
 };
 
 
-function testFunc(IcoContractAddress, TokenContractAddress) {
-  var Web3 = require('web3');
-  var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-  console.log(web3.version.api);
-  const addressRPC1 = '0x00e68a9f47eC93F2D75Ef3473bB09e6B5d5654e4';
+function testGetToken(IcoContractInstance, IcoTokenContractInstance, userId) {
 
-  var IcoContractABI = require('../build/contracts/IcoContract.json').abi;
-  var IcoTokenContractABI = require('../build/contracts/IcoToken.json').abi;
+}
 
-
-  var IcoContractInstance = web3.eth.contract(IcoContractABI).at(IcoContractAddress);
-  var IcoTokenContractInstance = web3.eth.contract(IcoTokenContractABI).at(TokenContractAddress);
-
+function testFunc(IcoContractInstance, IcoTokenContractInstance) {
   // listenning to event
   var events = IcoContractInstance.allEvents({ fromBlock: 0, toBlock: 'latest' }, function (error, result) {
     console.log('listenning to smart contract');

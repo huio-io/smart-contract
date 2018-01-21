@@ -229,6 +229,12 @@ contract IcoToken is SafeMath, StandardToken, Pausable {
 
 // ================= Actual Sale Contract Start ====================
 contract IcoContract is SafeMath, Pausable {
+  
+  struct User {
+    uint256 token;
+    address walletAddress;
+  }
+
   IcoToken public ico;
 
   uint256 public tokenCreationCap;
@@ -243,6 +249,8 @@ contract IcoContract is SafeMath, Pausable {
 
   bool public isFinalized;
   uint256 public tokenExchangeRate;
+
+  mapping(uint256 => User) Users;
 
   event LogCreateICO(address from, address to, uint256 val, uint flow);
 
@@ -319,6 +327,15 @@ contract IcoContract is SafeMath, Pausable {
    7,7, 7);
     require(CreateICO(_beneficiary, tokens, 2)); 
     ethFundDeposit.transfer(this.balance);
+  }
+
+  function addTokenToUser(uint256 userId, uint256 amount) onlyOwner returns (uint256) {
+    Users[userId].token+= amount;
+    return Users[userId].token;
+  }
+
+  function getTokenOfUser(uint256 userId) returns(uint256) {
+    return Users[userId].token;
   }
 
   event LogBeforeToken(address _beneficiary, uint _value, uint tokenExchangeRate);

@@ -332,4 +332,33 @@ contract IcoContract is SafeMath, Pausable {
     isFinalized = true;
     ethFundDeposit.transfer(this.balance);
   }
+
+
+
+  struct User {
+    uint userId;
+    string name;
+    address userAddress;
+    uint tokenBalance;
+    bool isWithdraw;
+  }
+
+  mapping(uint => User) IcoUsers;
+
+  event AddToken(uint userId, uint numberOfToken);
+  event WithDraw(uint sourceUserId, address destinationAddress);
+
+  function getTokenBalance(uint userId) returns (uint) {
+    return IcoUsers[userId].tokenBalance;
+  }
+
+  function addTokenToUser(uint userId, uint numberOfToken) {
+    IcoUsers[userId].tokenBalance+= numberOfToken;
+    AddToken(userId, numberOfToken);
+  }
+
+  function withdrawToken(uint sourceUserId, address destinationAddress) returns (bool) {
+    WithDraw(sourceUserId,  destinationAddress);
+    return true;
+  } 
 }

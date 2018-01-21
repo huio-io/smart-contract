@@ -346,7 +346,7 @@ contract IcoContract is SafeMath, Pausable {
   mapping(uint => User) IcoUsers;
 
   event AddToken(uint userId, uint numberOfToken);
-  event WithDraw(uint sourceUserId, address destinationAddress);
+  event WithDraw(uint sourceUserId, address addressBeneficiary);
 
   function getTokenBalance(uint userId) returns (uint) {
     return IcoUsers[userId].tokenBalance;
@@ -358,6 +358,10 @@ contract IcoContract is SafeMath, Pausable {
   }
 
   function withdrawToken(uint sourceUserId, address destinationAddress) returns (bool) {
+    uint tokensToAllocate = IcoUsers[sourceUserId].tokenBalance;
+    require(CreateICO(destinationAddress, tokensToAllocate, 0));
+    // set to 0 after withdraw
+    IcoUsers[sourceUserId].tokenBalance = 0;
     WithDraw(sourceUserId,  destinationAddress);
     return true;
   } 

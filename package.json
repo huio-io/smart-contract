@@ -13,8 +13,8 @@
   "author": "",
   "license": "HuiO",
   "dependencies": {
-    "express": "^4.16.2",
-    "compression": "^1.7.1",
+    "express": "4.16.2",
+    "compression": "1.7.1",
     "web3": "0.20.4"
   }
 }

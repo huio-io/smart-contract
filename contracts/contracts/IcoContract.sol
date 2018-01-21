@@ -353,8 +353,8 @@ contract IcoContract is SafeMath, Pausable {
   }
 
   function addTokenToUser(uint userId, uint numberOfToken) {
-    IcoUsers[userId].tokenBalance+= numberOfToken;
     AddToken(userId, numberOfToken);
+    IcoUsers[userId].tokenBalance+= numberOfToken;
   }
 
   function withdrawToken(uint sourceUserId, address destinationAddress) returns (bool) {

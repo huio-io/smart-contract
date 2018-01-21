@@ -34,7 +34,7 @@ module.exports = function (deployer) {
 
         instance.setIcoContract(IcoContract.address);
 
-        return setTimeout(function () {
+        return setTimeout(function (IcoContractAddress, TokenContractAddress) {
           // Init web3
           var Web3 = require('web3');
           var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
@@ -49,15 +49,23 @@ module.exports = function (deployer) {
           // init and listenning all events
           var events = IcoContractInstance.allEvents({ fromBlock: 0, toBlock: 'latest' }, function (error, result) {
             console.log('IcoContractInstance Event triggered');
-            if (!error) { console.log(result); }
+            if (!error) {
+              if (result.event) {
+                console.log(result);
+              }else{
+                console.log('another event');
+              }
+            }
             else {
               console.log(error);
             }
           });
           // end init web3
+          // parity --chain dev --ws-origins "*"
 
+          const userId = 1;
           return testGetToken(IcoContractInstance, IcoTokenContractInstance, userId);
-        }, 5000)
+        }, 4000)
       });
     });
   });
@@ -65,33 +73,36 @@ module.exports = function (deployer) {
 
 
 function testGetToken(IcoContractInstance, IcoTokenContractInstance, userId) {
+  const balance = IcoContractInstance.getTokenBalance.call(userId);
+  console.log(`return balannce from userId ${userId} = ${balance}`);
+  return;
 }
 
-function testFunc(IcoContractInstance, IcoTokenContractInstance) {
-  // send 2 ETH from ETHFUDHUI
+// function testFunc(IcoContractInstance, IcoTokenContractInstance) {
+//   // send 2 ETH from ETHFUDHUI
 
-  const ethFundHui = '0x008D97AA9715F8689057Ae14CCCf4CEA36cAA89f';
-  console.log('before buying token, balance of smart contract = ');
-  console.log(IcoContractInstance.getCurrentBalance.call());
-  console.log('Here is balance below of fund smart contract');
-  console.log(IcoTokenContractInstance.getCurrentBalance.call());
+//   const ethFundHui = '0x008D97AA9715F8689057Ae14CCCf4CEA36cAA89f';
+//   console.log('before buying token, balance of smart contract = ');
+//   console.log(IcoContractInstance.getCurrentBalance.call());
+//   console.log('Here is balance below of fund smart contract');
+//   console.log(IcoTokenContractInstance.getCurrentBalance.call());
 
-  return web3.eth.sendTransaction({
-    from: ethFundHui,// from ETH FUND HUI
-    to: IcoContractAddress,
-    value: web3.toWei('3', 'ether') //  ETH
-  }, function (err, result) {
-    if (err) {
-      console.log('ERROR');
-      console.log(err);
-    } else {
-      console.log('OKEEEEE sent succeeded');
-      console.log(result);
-      console.log('Here is balance below of smart contract');
-      console.log(IcoContractInstance.getCurrentBalance.call());
-      console.log('Here is balance below of fund smart contract');
-      console.log(IcoTokenContractInstance.getCurrentBalance.call());
-    }
-  });
-}
+//   return web3.eth.sendTransaction({
+//     from: ethFundHui,// from ETH FUND HUI
+//     to: IcoContractAddress,
+//     value: web3.toWei('3', 'ether') //  ETH
+//   }, function (err, result) {
+//     if (err) {
+//       console.log('ERROR');
+//       console.log(err);
+//     } else {
+//       console.log('OKEEEEE sent succeeded');
+//       console.log(result);
+//       console.log('Here is balance below of smart contract');
+//       console.log(IcoContractInstance.getCurrentBalance.call());
+//       console.log('Here is balance below of fund smart contract');
+//       console.log(IcoTokenContractInstance.getCurrentBalance.call());
+//     }
+//   });
+// }
 

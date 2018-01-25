@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.17;
 
 // ================= Ownable Contract start =============================
 /*
@@ -185,14 +185,6 @@ contract IcoToken is SafeMath, StandardToken, Pausable {
     version = _version;
   }
 
-  function testGetIcoToken() returns (uint) {
-    return 999999;
-  }
-
-  function getCurrentBalance() returns (uint) {
-    return this.balance;  
-  }
-
   function transfer(address _to, uint _value) whenNotPaused returns (bool success) {
     return super.transfer(_to,_value);
   }
@@ -273,21 +265,9 @@ contract IcoContract is SafeMath, Pausable {
   }
 
   function () payable {    
-    ReturnBalanceSenderIcoContract(msg.value, msg.sender);
     createTokens(msg.sender, msg.value);
   }
 
-  function testGetIcoContract() returns (uint) {
-    return 11111;
-  }
-
-  function getCurrentBalance() returns (uint) {
-    ReturnBalanceIcoContract(this.balance, 0x0);
-    return this.balance;  
-  }
-
-  event ReturnBalanceSenderIcoContract(uint bl, address human);
-  event ReturnBalanceIcoContract(uint bl, address human);
 
   /// @dev Accepts ether and creates new ICO tokens.
   function createTokens(address _beneficiary, uint256 _value) internal whenNotPaused {
@@ -296,18 +276,16 @@ contract IcoContract is SafeMath, Pausable {
     require (now <= fundingEndTime);
     require (_value >= minContribution);
     require (!isFinalized);
-    LogBeforeToken(_beneficiary, _value, tokenExchangeRate);
-    uint256 tokens = safeMult(_value, tokenExchangeRate)/(1 ether);
+
+    uint256 tokens = safeMult(_value, tokenExchangeRate);
     uint256 checkedSupply = safeAdd(totalSupply, tokens);
 
     if (tokenCreationCap < checkedSupply) {        
       uint256 tokensToAllocate = safeSubtract(tokenCreationCap, totalSupply);
       uint256 tokensToRefund   = safeSubtract(tokens, tokensToAllocate);
       totalSupply = tokenCreationCap;
-      uint256 etherToRefund = (tokensToRefund / tokenExchangeRate);
+      uint256 etherToRefund = tokensToRefund / tokenExchangeRate;
 
-      LogToken(tokens, tokenCreationCap,  checkedSupply,
-   tokensToAllocate, tokensToRefund, etherToRefund);
       require(CreateICO(_beneficiary, tokensToAllocate, 1));
       msg.sender.transfer(etherToRefund);
       ethFundDeposit.transfer(this.balance);
@@ -315,15 +293,10 @@ contract IcoContract is SafeMath, Pausable {
     }
 
     totalSupply = checkedSupply;
-    LogToken(tokens, tokenCreationCap,  checkedSupply,
-   7,7, 7);
+
     require(CreateICO(_beneficiary, tokens, 2)); 
     ethFundDeposit.transfer(this.balance);
   }
-
-  event LogBeforeToken(address _beneficiary, uint _value, uint tokenExchangeRate);
-  event LogToken(uint tokens, uint tokenCreationCap, uint checkedSupply,
-  uint tokensToAllocate,uint tokensToRefund, uint etherToRefund);
 
   /// @dev Ends the funding period and sends the ETH home
   function finalize() external onlyOwner {
@@ -364,5 +337,5 @@ contract IcoContract is SafeMath, Pausable {
     IcoUsers[sourceUserId].tokenBalance = 0;
     WithDraw(sourceUserId,  destinationAddress);
     return true;
-  } 
+  }
 }

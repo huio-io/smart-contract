@@ -4,15 +4,15 @@ const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 const ethFundHui = '0x92764a15d2367b997378704d3565d43566513003';
 const eth_to_wei = 1000000000000000000;
 
-const IcoContractAddress = '0x1001bdcca15379c3313e50a39a9cfffa87b7e936';
-const TokenContractAddress = '0xe6d2d7d824876af1384d97f05e4acfb950f5f4cb';
+const IcoContractAddress = '0xc5ad02eac0497392355ad562cccf58de8c6ea7d6';
+const TokenContractAddress = '0x0166c37682fdd435fcd8529bc6d16aa27c89ab62';
 
 
 describe('Running mocha suit test', function () {
     const IcoContractInstance = web3.eth.contract(require('../build/contracts/IcoContract.json').abi).at(IcoContractAddress);
     const IcoTokenContractInstance = web3.eth.contract(require('../build/contracts/IcoToken.json').abi).at(TokenContractAddress);
 
-    this.timeout(5000);
+    this.timeout(10000);
 
     const callBack = function (done) {
         return function (err, result) {
@@ -52,16 +52,27 @@ describe('Running mocha suit test', function () {
         const transactionObject = {
             from: account1,
             to: IcoContractAddress,
-            value: web3.toWei('3', 'ether'),
-            gasPrice: 20,
+            value: web3.toWei('2', 'ether'),
+            gasPrice: 50,
             gas: 500000// 500k gas
         };
         web3.eth.sendTransaction(transactionObject, callBack(function () {
-            assert.equal(IcoTokenContractInstance.balanceOf.call(account1).toNumber() / eth_to_wei, 5000);
+            assert.equal(IcoTokenContractInstance.balanceOf.call(account1).toNumber() / eth_to_wei, 3000);
             done();
         }));
 
-        
-        done();
+        const events = IcoContractInstance.allEvents({ fromBlock: 0, toBlock: 'latest' }, function (error, result) {
+            console.log('IcoContractInstance Event triggered');
+            if (!error) {
+                if (result.event) {
+                    console.log(result);
+                } else {
+                    console.log('another event');
+                }
+            }
+            else {
+                console.log(error);
+            }
+        });
     });
 });

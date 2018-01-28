@@ -6,12 +6,13 @@ module.exports = function (deployer) {
   deployer.deploy(Migrations);
   deployer.deploy(
     IcoToken,
-    'HuiO Token',
-    'HUIOn',
+    'TRON Token',
+    'TRX',
     '18',
     '1.0'
   ).then(() => {
     // define params
+    
     const ethFundAddress = '0xaaea9575e6d2b21bf93ba259509e1b80a30f2481';// ETH account (9)
     const softCapToken = '100000000000000000000000000'; // 1 billion Tokens
     const ratio_ETH_HUI = '1000'; // 1 ETH = 1000 Token = 1000*10^18 wei

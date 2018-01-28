@@ -2,8 +2,13 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const path = require('path');
-const web3Service = require('./shared/service/web3.service');
 const ErrorHandler = require('./shared/errorHandler');
+
+fs.existsSync('./local.js') ? require('./local').setUpGlobalVariables() : console.log('Local setting is not found.');
+
+console.log('Setting up web3.');
+const web3Service = require('./shared/service/web3.service');
+console.log(web3Service.isWeb3Connected() ? 'Web3 ok' : 'Web3 failed');
 
 app.set('port', process.env.PORT || 3000);
 
@@ -52,6 +57,7 @@ try {
 
 app.use((error, request, response, next) => {
     // Error handler
+    console.log(error);
     const errorObject = ErrorHandler.getErrorObject(error);
     response.status(errorObject.httpCode).send({
         error: {

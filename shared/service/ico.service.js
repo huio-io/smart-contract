@@ -1,6 +1,6 @@
 const Web3Service = require('./web3.service');
 
-function addToken(amount, userId) {
+function addToken(userId, amount) {
     return Web3Service.addTokenToAddress(userId, amount);
 }
 

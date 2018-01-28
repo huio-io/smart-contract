@@ -7,12 +7,12 @@ module.exports = function (deployer) {
   deployer.deploy(
     IcoToken,
     'HuiO Token',
-    'Hui',
+    'HUIOn',
     '18',
     '1.0'
   ).then(() => {
     // define params
-    const ethFundAddress = '0x0076900774D91414c906656ad61a02b9d7aA222d';// ETH account (9)
+    const ethFundAddress = '0xaaea9575e6d2b21bf93ba259509e1b80a30f2481';// ETH account (9)
     const softCapToken = '100000000000000000000000000'; // 1 billion Tokens
     const ratio_ETH_HUI = '1000'; // 1 ETH = 1000 Token = 1000*10^18 wei
     const dateStart = '1516785704'; // Sat Jan 20 2018 11:16:30

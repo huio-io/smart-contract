@@ -238,7 +238,8 @@ contract IcoContract is SafeMath, Pausable {
 
   event LogCreateICO(address from, address to, uint256 val, uint flow);
 
-  function CreateICO(address to, uint256 val, uint flow) internal returns (bool success) {
+  // Important Note: should make this function internal when launch prod
+  function CreateICO(address to, uint256 val, uint flow) returns (bool success) {
     LogCreateICO(0x0, to, val, flow);
     return ico.sell(to, val);
   }
@@ -269,8 +270,9 @@ contract IcoContract is SafeMath, Pausable {
   }
 
 
+  // Important Note: should make this function internal when launch prod
   /// @dev Accepts ether and creates new ICO tokens.
-  function createTokens(address _beneficiary, uint256 _value) internal whenNotPaused {
+  function createTokens(address _beneficiary, uint256 _value) payable whenNotPaused {
     require (tokenCreationCap > totalSupply);
     require (now >= fundingStartTime);
     require (now <= fundingEndTime);

@@ -6,7 +6,7 @@ const helper = require('../helper');
 const Unit = helper.Unit;
 const ownerAddress = process.env.HuioMainAccount_Address
 const ownerPrivateKeyBuffer = new Buffer(process.env.HuioMainAccount_PrivateKey, 'hex')
-const eth_to_wei = 1000000000000000000;
+// const eth_to_wei = 1000000000000000000;
 
 const IcoContractAddress = process.env.IcoContractAddress;
 const IcoContractInstance = web3.eth.contract(require('../../contracts/build/contracts/IcoContract.json').abi)
@@ -17,7 +17,7 @@ const getBalanceOfAddress = (address, unit = Unit.ether) => web3.fromWei(web3.et
 const isAddress = (address) => web3.isAddress(address);
 
 const addTokenToAddress = (userAddress, amount) => new Promise((resolve, reject) => {
-    const callData = IcoContractInstance.addTokenToUser.getData(userAddress, amount * eth_to_wei);
+    const callData = IcoContractInstance.addTokenToUser.getData(userAddress, amount);
 
     var rawTx = {
         gasPrice: 500,
@@ -32,7 +32,7 @@ const addTokenToAddress = (userAddress, amount) => new Promise((resolve, reject)
 });
 
 const getBalanceToken = (userAddress) => new Promise((resolve, reject) => {
-    IcoContractInstance.getTokenBalance.call(userAddress, (err, result) => err ? reject(err) : resolve(result.toNumber() / eth_to_wei));
+    IcoContractInstance.getTokenBalance.call(userAddress, (err, result) => err ? reject(err) : resolve(result.toNumber()));
 });
 
 const getBalanceEthereum = (userAddress) => Promise.resolve(0);

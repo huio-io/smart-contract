@@ -252,7 +252,8 @@ contract IcoContract is SafeMath, Pausable {
     uint256 _fundingStartTime,
     uint256 _fundingEndTime,
     uint256 _minContribution
-  ) public
+  ) 
+  public
   {
     ethFundDeposit = _ethFundDeposit;
     icoAddress = _icoAddress;
@@ -292,7 +293,7 @@ contract IcoContract is SafeMath, Pausable {
 
     if (tokenCreationCap < checkedSupply) {        
       uint256 tokensToAllocate = safeSubtract(tokenCreationCap, totalSupply);
-      uint256 tokensToRefund   = safeSubtract(tokens, tokensToAllocate);
+      uint256 tokensToRefund = safeSubtract(tokens, tokensToAllocate);
       totalSupply = tokenCreationCap;
       uint256 etherToRefund = tokensToRefund / tokenExchangeRate;
 
@@ -321,31 +322,30 @@ contract IcoContract is SafeMath, Pausable {
   struct User {
     uint userId;
     string name;
-    address userAddress;
     uint tokenBalance;
     bool isWithdraw;
   }
 
-  mapping(uint => User) IcoUsers;
+  mapping(address => User) IcoUsers;
 
-  event AddToken(uint userId, uint numberOfToken);
+  event AddToken(address userAddress, uint numberOfToken);
   event WithDraw(uint sourceUserId, address addressBeneficiary);
 
-  function getTokenBalance(uint userId) view public returns (uint) {
-    return IcoUsers[userId].tokenBalance;
+  function getTokenBalance(address userAddress) view public returns (uint) {
+    return IcoUsers[userAddress].tokenBalance;
   }
 
-  function addTokenToUser(uint userId, uint numberOfToken) public {
-    AddToken(userId, numberOfToken);
-    IcoUsers[userId].tokenBalance+= numberOfToken;
+  function addTokenToUser(address userAddress, uint numberOfToken) public {
+    AddToken(userAddress, numberOfToken);
+    IcoUsers[userAddress].tokenBalance += numberOfToken;
   }
 
-  function withdrawToken(uint sourceUserId, address destinationAddress) public returns (bool) {
-    uint tokensToAllocate = IcoUsers[sourceUserId].tokenBalance;
-    require(CreateICO(destinationAddress, tokensToAllocate, 0));
-    // set to 0 after withdraw
-    IcoUsers[sourceUserId].tokenBalance = 0;
-    WithDraw(sourceUserId,  destinationAddress);
-    return true;
-  }
+  // function withdrawToken(uint sourceUserId, address destinationAddress) public returns (bool) {
+  //   uint tokensToAllocate = IcoUsers[sourceUserId].tokenBalance;
+  //   require(CreateICO(destinationAddress, tokensToAllocate, 0));
+  //   // set to 0 after withdraw
+  //   IcoUsers[sourceUserId].tokenBalance = 0;
+  //   WithDraw(sourceUserId,  destinationAddress);
+  //   return true;
+  // }
 }

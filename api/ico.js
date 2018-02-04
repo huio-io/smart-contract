@@ -55,7 +55,7 @@ function getBalance(request, response, next) {
                 },
                 balance: {
                     token: result[0],
-                    ethereum: result[1]
+                    wei: result[1]
                 }
             })
         })

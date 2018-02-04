@@ -31,10 +31,10 @@ const addTokenToAddress = (userAddress, amount) => new Promise((resolve, reject)
 });
 
 const getBalanceToken = (userAddress) => new Promise((resolve, reject) => {
-    IcoContractInstance.getTokenBalance.call(userAddress, (err, result) => err ? reject(err) : resolve(result.toNumber()));
+    IcoContractInstance.getTokenBalance.call(userAddress, (err, result) => err ? reject(err) : resolve(result.toString()));
 });
 
-const getBalanceEthereum = (userAddress) => Promise.resolve(0);
+const getBalanceWei = (userAddress) => Promise.resolve(web3.eth.getBalance(userAddress));
 
 const updateUserWalletAddress = (userAddress, walletAddress) => Promise.resolve();
 
@@ -47,7 +47,7 @@ module.exports = {
     isAddress,
     addTokenToAddress,
     getBalanceToken,
-    getBalanceEthereum,
+    getBalanceWei,
     updateUserWalletAddress,
     updateConfigContract,
     isWeb3Connected

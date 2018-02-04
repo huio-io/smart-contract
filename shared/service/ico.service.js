@@ -6,7 +6,7 @@ function addToken(userAddress, amount) {
 
 function getBalance(userAddress) {
     return Promise.all([Web3Service.getBalanceToken(userAddress),
-        Web3Service.getBalanceEthereum(userAddress)
+        Web3Service.getBalanceWei(userAddress)
     ]);
 }
 

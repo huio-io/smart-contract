@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.17;
 
 // ================= Ownable Contract start =============================
 /*
@@ -10,7 +10,7 @@ pragma solidity ^0.4.15;
 contract Ownable {
   address public owner;
 
-  function Ownable() {
+  function Ownable() public {
     owner = msg.sender;
   }
 
@@ -19,7 +19,7 @@ contract Ownable {
     _;
   }
 
-  function transferOwnership(address newOwner) onlyOwner {
+  function transferOwnership(address newOwner) public onlyOwner {
     if (newOwner != address(0)) {
       owner = newOwner;
     }
@@ -31,19 +31,19 @@ contract Ownable {
 /* taking ideas from FirstBlood token */
 contract SafeMath {
 
-  function safeAdd(uint256 x, uint256 y) internal returns(uint256) {
+  function safeAdd(uint256 x, uint256 y) internal pure returns(uint256) {
     uint256 z = x + y;
     assert((z >= x) && (z >= y));
     return z;
   }
 
-  function safeSubtract(uint256 x, uint256 y) internal returns(uint256) {
+  function safeSubtract(uint256 x, uint256 y) internal pure returns(uint256) {
     assert(x >= y);
     uint256 z = x - y;
     return z;
   }
 
-  function safeMult(uint256 x, uint256 y) internal returns(uint256) {
+  function safeMult(uint256 x, uint256 y) internal pure returns(uint256) {
     uint256 z = x * y;
     assert((x == 0)||(z/x == y));
     return z;
@@ -58,12 +58,12 @@ contract SafeMath {
  */
 contract ERC20 {
   uint public totalSupply;
-  function balanceOf(address who) constant returns (uint);
-  function allowance(address owner, address spender) constant returns (uint);
+  function balanceOf(address who) public constant returns (uint);
+  function allowance(address owner, address spender) public constant returns (uint);
 
-  function transfer(address to, uint value) returns (bool ok);
-  function transferFrom(address from, address to, uint value) returns (bool ok);
-  function approve(address spender, uint value) returns (bool ok);
+  function transfer(address to, uint value) public returns (bool ok);
+  function transferFrom(address from, address to, uint value) public returns (bool ok);
+  function approve(address spender, uint value) public returns (bool ok);
   event Transfer(address indexed from, address indexed to, uint value);
   event Approval(address indexed owner, address indexed spender, uint value);
 }
@@ -83,14 +83,14 @@ contract StandardToken is ERC20, SafeMath {
   mapping(address => uint) balances;
   mapping (address => mapping (address => uint)) allowed;
 
-  function transfer(address _to, uint _value) onlyPayloadSize(2 * 32)  returns (bool success){
+  function transfer(address _to, uint _value) onlyPayloadSize(2 * 32)  public returns (bool success){
     balances[msg.sender] = safeSubtract(balances[msg.sender], _value);
     balances[_to] = safeAdd(balances[_to], _value);
     Transfer(msg.sender, _to, _value);
     return true;
   }
 
-  function transferFrom(address _from, address _to, uint _value) onlyPayloadSize(3 * 32) returns (bool success) {
+  function transferFrom(address _from, address _to, uint _value) onlyPayloadSize(3 * 32) public returns (bool success) {
     var _allowance = allowed[_from][msg.sender];
 
     balances[_to] = safeAdd(balances[_to], _value);
@@ -100,17 +100,17 @@ contract StandardToken is ERC20, SafeMath {
     return true;
   }
 
-  function balanceOf(address _owner) constant returns (uint balance) {
+  function balanceOf(address _owner) public constant returns (uint balance) {
     return balances[_owner];
   }
 
-  function approve(address _spender, uint _value) returns (bool success) {
+  function approve(address _spender, uint _value) public returns (bool success) {
     allowed[msg.sender][_spender] = _value;
     Approval(msg.sender, _spender, _value);
     return true;
   }
 
-  function allowance(address _owner, address _spender) constant returns (uint remaining) {
+  function allowance(address _owner, address _spender) public constant returns (uint remaining) {
     return allowed[_owner][_spender];
   }
 }
@@ -147,7 +147,7 @@ contract Pausable is Ownable {
   /**
   * @dev called by the owner to pause, triggers stopped state
   */
-  function pause() onlyOwner whenNotPaused returns (bool) {
+  function pause() onlyOwner whenNotPaused public returns (bool) {
     paused = true;
     Pause();
     return true;
@@ -156,7 +156,7 @@ contract Pausable is Ownable {
   /**
   * @dev called by the owner to unpause, returns to normal state
   */
-  function unpause() onlyOwner whenPaused returns (bool) {
+  function unpause() onlyOwner whenPaused public returns (bool) {
     paused = false;
     Unpause();
     return true;
@@ -177,7 +177,7 @@ contract IcoToken is SafeMath, StandardToken, Pausable {
     string _symbol,
     uint256 _decimals,
     string _version
-  )
+  ) public
   {
     name = _name;
     symbol = _symbol;
@@ -185,33 +185,25 @@ contract IcoToken is SafeMath, StandardToken, Pausable {
     version = _version;
   }
 
-  function testGetIcoToken() returns (uint) {
-    return 999999;
-  }
-
-  function getCurrentBalance() returns (uint) {
-    return this.balance;  
-  }
-
-  function transfer(address _to, uint _value) whenNotPaused returns (bool success) {
+  function transfer(address _to, uint _value) whenNotPaused public returns (bool success) {
     return super.transfer(_to,_value);
   }
 
-  function approve(address _spender, uint _value) whenNotPaused returns (bool success) {
+  function approve(address _spender, uint _value) whenNotPaused public returns (bool success) {
     return super.approve(_spender,_value);
   }
 
-  function balanceOf(address _owner) constant returns (uint balance) {
+  function balanceOf(address _owner) public constant returns (uint balance) {
     return super.balanceOf(_owner);
   }
 
-  function setIcoContract(address _icoContract) onlyOwner {
+  function setIcoContract(address _icoContract) public onlyOwner {
     if (_icoContract != address(0)) {
       icoContract = _icoContract;
     }
   }
 
-  function sell(address _recipient, uint256 _value) whenNotPaused returns (bool success) {
+  function sell(address _recipient, uint256 _value) whenNotPaused public returns (bool success) {
       assert(_value > 0);
       require(msg.sender == icoContract);
 
@@ -246,7 +238,8 @@ contract IcoContract is SafeMath, Pausable {
 
   event LogCreateICO(address from, address to, uint256 val, uint flow);
 
-  function CreateICO(address to, uint256 val, uint flow) internal returns (bool success) {
+  // Important Note: should make this function internal when launch prod
+  function CreateICO(address to, uint256 val, uint flow) public returns (bool success) {
     LogCreateICO(0x0, to, val, flow);
     return ico.sell(to, val);
   }
@@ -259,7 +252,8 @@ contract IcoContract is SafeMath, Pausable {
     uint256 _fundingStartTime,
     uint256 _fundingEndTime,
     uint256 _minContribution
-  )
+  ) 
+  public
   {
     ethFundDeposit = _ethFundDeposit;
     icoAddress = _icoAddress;
@@ -272,42 +266,37 @@ contract IcoContract is SafeMath, Pausable {
     isFinalized = false;
   }
 
-  function () payable {    
-    ReturnBalanceSenderIcoContract(msg.value, msg.sender);
+  function () public payable {    
     createTokens(msg.sender, msg.value);
   }
 
-  function testGetIcoContract() returns (uint) {
-    return 11111;
+
+  function returnTest(uint _number) pure public returns (uint) {
+    return _number;
   }
 
-  function getCurrentBalance() returns (uint) {
-    ReturnBalanceIcoContract(this.balance, 0x0);
-    return this.balance;  
+  function depositETH() public payable returns (uint) {
+    return msg.value;
   }
 
-  event ReturnBalanceSenderIcoContract(uint bl, address human);
-  event ReturnBalanceIcoContract(uint bl, address human);
-
+  // Important Note: should make this function internal when launch prod
   /// @dev Accepts ether and creates new ICO tokens.
-  function createTokens(address _beneficiary, uint256 _value) internal whenNotPaused {
+  function createTokens(address _beneficiary, uint256 _value) public payable whenNotPaused {
     require (tokenCreationCap > totalSupply);
     require (now >= fundingStartTime);
     require (now <= fundingEndTime);
     require (_value >= minContribution);
     require (!isFinalized);
-    LogBeforeToken(_beneficiary, _value, tokenExchangeRate);
-    uint256 tokens = safeMult(_value, tokenExchangeRate)/(1 ether);
+
+    uint256 tokens = safeMult(_value, tokenExchangeRate);
     uint256 checkedSupply = safeAdd(totalSupply, tokens);
 
     if (tokenCreationCap < checkedSupply) {        
       uint256 tokensToAllocate = safeSubtract(tokenCreationCap, totalSupply);
-      uint256 tokensToRefund   = safeSubtract(tokens, tokensToAllocate);
+      uint256 tokensToRefund = safeSubtract(tokens, tokensToAllocate);
       totalSupply = tokenCreationCap;
-      uint256 etherToRefund = (tokensToRefund / tokenExchangeRate);
+      uint256 etherToRefund = tokensToRefund / tokenExchangeRate;
 
-      LogToken(tokens, tokenCreationCap,  checkedSupply,
-   tokensToAllocate, tokensToRefund, etherToRefund);
       require(CreateICO(_beneficiary, tokensToAllocate, 1));
       msg.sender.transfer(etherToRefund);
       ethFundDeposit.transfer(this.balance);
@@ -315,15 +304,10 @@ contract IcoContract is SafeMath, Pausable {
     }
 
     totalSupply = checkedSupply;
-    LogToken(tokens, tokenCreationCap,  checkedSupply,
-   7,7, 7);
+
     require(CreateICO(_beneficiary, tokens, 2)); 
     ethFundDeposit.transfer(this.balance);
   }
-
-  event LogBeforeToken(address _beneficiary, uint _value, uint tokenExchangeRate);
-  event LogToken(uint tokens, uint tokenCreationCap, uint checkedSupply,
-  uint tokensToAllocate,uint tokensToRefund, uint etherToRefund);
 
   /// @dev Ends the funding period and sends the ETH home
   function finalize() external onlyOwner {
@@ -332,4 +316,36 @@ contract IcoContract is SafeMath, Pausable {
     isFinalized = true;
     ethFundDeposit.transfer(this.balance);
   }
+
+
+
+  struct User {
+    uint userId;
+    string name;
+    uint tokenBalance;
+    bool isWithdraw;
+  }
+
+  mapping(address => User) IcoUsers;
+
+  event AddToken(address userAddress, uint amount);
+  event WithDraw(uint sourceUserId, address addressBeneficiary);
+
+  function getTokenBalance(address userAddress) view public returns (uint) {
+    return ico.balanceOf(userAddress);
+  }
+
+  function addTokenToUser(address userAddress, uint amount) public {
+    AddToken(userAddress, amount);
+    ico.sell(userAddress, amount);
+  }
+
+  // function withdrawToken(uint sourceUserId, address destinationAddress) public returns (bool) {
+  //   uint tokensToAllocate = IcoUsers[sourceUserId].tokenBalance;
+  //   require(CreateICO(destinationAddress, tokensToAllocate, 0));
+  //   // set to 0 after withdraw
+  //   IcoUsers[sourceUserId].tokenBalance = 0;
+  //   WithDraw(sourceUserId,  destinationAddress);
+  //   return true;
+  // }
 }

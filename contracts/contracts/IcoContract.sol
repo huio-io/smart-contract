@@ -328,16 +328,16 @@ contract IcoContract is SafeMath, Pausable {
 
   mapping(address => User) IcoUsers;
 
-  event AddToken(address userAddress, uint numberOfToken);
+  event AddToken(address userAddress, uint amount);
   event WithDraw(uint sourceUserId, address addressBeneficiary);
 
   function getTokenBalance(address userAddress) view public returns (uint) {
-    return IcoUsers[userAddress].tokenBalance;
+    return ico.balanceOf(userAddress);
   }
 
-  function addTokenToUser(address userAddress, uint numberOfToken) public {
-    AddToken(userAddress, numberOfToken);
-    IcoUsers[userAddress].tokenBalance += numberOfToken;
+  function addTokenToUser(address userAddress, uint amount) public {
+    AddToken(userAddress, amount);
+    ico.sell(userAddress, amount);
   }
 
   // function withdrawToken(uint sourceUserId, address destinationAddress) public returns (bool) {

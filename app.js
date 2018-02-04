@@ -6,6 +6,14 @@ const ErrorHandler = require('./shared/errorHandler');
 
 fs.existsSync('./local.js') ? require('./local').setUpGlobalVariables() : console.log('Local setting is not found.');
 
+process.env.IcoContractAddress = "0xf2c6AF5022b512E370eB4c4777d96A4221228a83";
+process.env.TokenContractAddress = ""
+process.env.HuioMainAccount_Address = "0xcd4372b5521674d1cbfe19f9043cc900c8b00f4b";
+process.env.HuioMainAccount_PrivateKey = "efe7791f0ba33a58765e61c2c51fc943e8051034be25afc3abe84b3907e2e501";
+// process.env.rinkebyEndpoint = "http://localhost:8545"; // will rename Web3HttpProvider
+process.env.rinkebyEndpoint = "https://rinkeby.infura.io/G69ynyy2Mc11raCYR3UJ";
+process.env.ETHFundAddress = ""
+
 console.log('Setting up web3.');
 const web3Service = require('./shared/service/web3.service');
 console.log(web3Service.isWeb3Connected() ? 'Web3 ok' : 'Web3 failed');

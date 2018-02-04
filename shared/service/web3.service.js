@@ -18,10 +18,9 @@ const isAddress = (address) => web3.isAddress(address);
 
 const addTokenToAddress = (userAddress, amount) => new Promise((resolve, reject) => {
     const callData = IcoContractInstance.addTokenToUser.getData(userAddress, amount);
-
     var rawTx = {
-        gasPrice: 500,
-        gas: 700000, // 700k gas
+        gasPrice: web3.toHex(web3.toWei('4', helper.Unit.gwei)),
+        gas: 100000, // 700k gas
         to: IcoContractAddress,
         data: callData,
         nonce: web3.eth.getTransactionCount(ownerAddress)

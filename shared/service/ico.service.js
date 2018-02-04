@@ -1,17 +1,17 @@
 const Web3Service = require('./web3.service');
 
-function addToken(amount, userId) {
-    return Web3Service.addTokenToAddress(userId, amount);
+function addToken(userAddress, amount) {
+    return Web3Service.addTokenToAddress(userAddress, amount);
 }
 
-function getBalance(userId) {
-    return Promise.all([Web3Service.getBalanceToken(userId),
-        Web3Service.getBalanceEthereum(userId)
+function getBalance(userAddress) {
+    return Promise.all([Web3Service.getBalanceToken(userAddress),
+        Web3Service.getBalanceWei(userAddress)
     ]);
 }
 
-function updateUserWalletAddress(userId, walletAddress) {
-    return Web3Service.updateUserWalletAddress(userId, walletAddress);
+function updateUserWalletAddress(userAddress, walletAddress) {
+    return Web3Service.updateUserWalletAddress(userAddress, walletAddress);
 }
 
 function updateConfigContract(supply, ownership, addressMigration,

@@ -38,4 +38,5 @@ testem.log
 Thumbs.db
 npm-debug*
 src/server/public/logs/*.log
-src/app/shared/components/footer-copyright/footer-copyright.component.html
+
+contracts/build/

@@ -8,7 +8,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "postinstall": "cd contracts && node ../node_modules/truffle/build/cli.bundled.js compile"
   },
   "author": "",
   "license": "HuiO",
@@ -17,5 +18,8 @@
     "ethereumjs-tx": "^1.3.3",
     "express": "4.16.2",
     "web3": "0.20.4"
+  },
+  "devDependencies": {
+    "truffle": "^4.0.6"
   }
 }
